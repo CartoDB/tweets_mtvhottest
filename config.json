@@ -1,4 +1,8 @@
-SETTINGS = {
+CONFIG = {
+  webpage: {
+    title: "2013 MTV Hottest",
+    subtile: "Amount of tweets about this"
+  }
   static_map: {
     vizjson: "http://osm2.cartodb.com/api/v2/viz/271acd62-0103-11e3-a6ca-6805ca04cef1/viz.json"
   },
@@ -13,7 +17,7 @@ SETTINGS = {
       animation_scale: 10,
       ball_size_gain: 1,
       ball_animation_speed: 8,
-      balls_color: "rgba(238, 45, 45, .50)",
-      cdn_url: "0.tiles.cartocdn.com"
-    }
+      balls_color: "rgba(238, 45, 45, .50)"
+  },
+  cdn_url: "0.tiles.cartocdn.com"
 }
