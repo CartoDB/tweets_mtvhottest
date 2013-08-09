@@ -15,7 +15,7 @@ CONFIG = {
       resolution:1,
       countby:'sum(i.retweets + 1)',
       animation_scale: 10,
-      ball_size_gain: 0.3,
+      ball_size_gain: 0.2,
       ball_animation_speed: 8,
       balls_color: "rgba(252,11,130, .50)"
   },
