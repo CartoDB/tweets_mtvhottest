@@ -10,16 +10,7 @@ function meterToPixels(mx, my, zoom) {
 
 L.TimeLayer = L.CanvasLayer.extend({
 
-  options: {
-    user:'javi',
-    table:'game7_tweets',
-    column:'timestamp',
-    steps: 1250,
-    step: 15*60,
-    resolution:1,
-    countby:'count(i.cartodb_id)',
-    cdn_url: "0.tiles.cartocdn.com"
-  },
+  options: window.AppData.DYNAMIC_MAP,
 
   initialize: function(options) {
     L.CanvasLayer.prototype.initialize.call(this);
@@ -68,28 +59,42 @@ L.TimeLayer = L.CanvasLayer.extend({
     // se contains the deforestation for each entry in sd
     // take se and sd as a matrix [se|sd]
     var numTiles = 1 << zoom;
-    var sql = "WITH hgrid AS ( " +
-    "    SELECT CDB_RectangleGrid( " +
-    "       CDB_XYZ_Extent({0}, {1}, {2}), ".format(coord.x, coord.y, zoom) +
-    "       CDB_XYZ_Resolution({0}) * {1}, ".format(zoom, self.options.resolution) +
-    "       CDB_XYZ_Resolution({0}) * {1} ".format(zoom, self.options.resolution) +
-    "    ) as cell " +
-    " ) " +
-    " SELECT  " +
-    "    x, y, array_agg(c) spurs, array_agg(f) heat, array_agg(d) dates " +
-    " FROM ( " +
-    "    SELECT " +
-    "      round(CAST (st_xmax(hgrid.cell) AS numeric),4) x, round(CAST (st_ymax(hgrid.cell) AS numeric),4) y, " +
-    "      sum(i.spurs) c, sum(i.heat) f, floor((date_part('epoch',{1})- {2})/{3}) d ".format(self.options.countby, self.options.column, self.options.start_date, self.options.step) +
-    "    FROM " +
-    "        hgrid, {0} i ".format(self.options.table) +
-    "    WHERE " +
-    "        date_part('epoch',i.{0}) > {1} ".format(self.options.column, self.options.start_date) + 
-    "        AND date_part('epoch',i.{0}) < {1} ".format(self.options.column, self.options.end_date) + 
-    "        AND ST_Intersects(i.the_geom_webmercator, hgrid.cell) " +
-    "    GROUP BY " +
-    "        hgrid.cell, floor((date_part('epoch',{0}) - {1})/{2})".format(self.options.column, self.options.start_date, self.options.step) +
-    " ) f GROUP BY x, y";
+
+
+    sql = "WITH cte AS ( " +
+            "SELECT ST_SnapToGrid(i.the_geom_webmercator, " +
+                                  "CDB_XYZ_Resolution({0})*{1}) g".format(zoom, 4) +
+            ", {0} c " .format(self.options.countby) +
+            ", floor((date_part('epoch',{0}) - {1})/{2}) d" .format(self.options.column, self.options.start_date, self.options.step);
+    sql += " FROM {0} i\n".format(this.options.table) +
+           "WHERE i.the_geom_webmercator && CDB_XYZ_Extent({0}, {1}, {2}) "
+              .format(coord.x, coord.y, zoom) +
+           " GROUP BY g, d";
+    sql += ") SELECT st_x(g) x, st_y(g) y, array_agg(c) vals, array_agg(d) dates ";
+    sql += " FROM cte GROUP BY x,y";
+
+    // var sql = "WITH hgrid AS ( " +
+    // "    SELECT CDB_RectangleGrid( " +
+    // "       CDB_XYZ_Extent({0}, {1}, {2}), ".format(coord.x, coord.y, zoom) +
+    // "       CDB_XYZ_Resolution({0}) * {1}, ".format(zoom, self.options.resolution) +
+    // "       CDB_XYZ_Resolution({0}) * {1} ".format(zoom, self.options.resolution) +
+    // "    ) as cell " +
+    // " ) " +
+    // " SELECT  " +
+    // "    x, y, array_agg(c) tweets, array_agg(d) dates " +
+    // " FROM ( " +
+    // "    SELECT " +
+    // "      round(CAST (st_xmax(hgrid.cell) AS numeric),4) x, round(CAST (st_ymax(hgrid.cell) AS numeric),4) y, " +
+    // "      {0} c, floor((date_part('epoch',{1})- {2})/{3}) d ".format(self.options.countby, self.options.column, self.options.start_date, self.options.step) +
+    // "    FROM " +
+    // "        hgrid, {0} i ".format(self.options.table) +
+    // "    WHERE " +
+    // "        date_part('epoch',i.{0}) > {1} ".format(self.options.column, self.options.start_date) + 
+    // "        AND date_part('epoch',i.{0}) < {1} ".format(self.options.column, self.options.end_date) + 
+    // "        AND ST_Intersects(i.the_geom_webmercator, hgrid.cell) " +
+    // "    GROUP BY " +
+    // "        hgrid.cell, floor((date_part('epoch',{0}) - {1})/{2})".format(self.options.column, self.options.start_date, self.options.step) +
+    // " ) f GROUP BY x, y";
 
     self.sql(sql, function (data) {
       var time_data = self.pre_cache_months(data.rows, coord, zoom);
@@ -108,7 +113,7 @@ L.TimeLayer = L.CanvasLayer.extend({
         xcoords = new Float32Array(rows.length);
         ycoords = new Float32Array(rows.length);
         values = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
-        values_non_es = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
+        // values_non_es = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
     } else {
       alert("you browser does not support Typed Arrays");
       return;
@@ -124,24 +129,8 @@ L.TimeLayer = L.CanvasLayer.extend({
         var base_idx = i * this.MAX_UNITS;
         //def[row.sd[0]] = row.se[0];
         for (var j = 0; j < row.dates.length; ++j) {
-            values[base_idx + row.dates[j]] = Math.min(row.spurs[j]*window.BALL_SIZE_GAIN, 30);
-            values_non_es[base_idx + row.dates[j]] = Math.min(row.heat[j]*window.BALL_SIZE_GAIN, 30);
-            /*if (row.vals[j] > this.MAX_VALUE) {
-                this.MAX_VALUE = row.vals[j];
-                this.MAX_VALUE_LOG = Math.log(this.MAX_VALUE);
-            }*/
-
+            values[base_idx + row.dates[j]] = Math.min(row.vals[j]*window.BALL_SIZE_GAIN, 30);
         }
-        /*
-       for (var j = 1; j < this.MAX_UNITS; ++j) {
-              values[base_idx + j] += values[base_idx + j - 1];
-              if (values[base_idx + j] > this.MAX_VALUE) {
-                  this.MAX_VALUE = values[base_idx + j];
-                  this.MAX_VALUE_LOG = Math.log(this.MAX_VALUE);
-              }
-          }
-          */
-
     }
 
     return {
@@ -149,7 +138,7 @@ L.TimeLayer = L.CanvasLayer.extend({
         xcoords: xcoords,
         ycoords: ycoords,
         values: values,
-        values_non_es: values_non_es,
+        // values_non_es: values_non_es,
         size: 1 << (this.resolution * 2)
     };
   },
@@ -169,10 +158,6 @@ L.TimeLayer = L.CanvasLayer.extend({
         var cell = tile.values[this.MAX_UNITS * i + this.time];
         if (cell) {
           this.queue.push([xcoords[i],  ycoords[i], cell, 0]);
-        }
-        var cell = tile.values_non_es[this.MAX_UNITS * i + this.time];
-        if (cell) {
-          this.queue.push([xcoords[i],  ycoords[i], cell, 1]);
         }
       }
   },

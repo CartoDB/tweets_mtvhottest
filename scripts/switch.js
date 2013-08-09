@@ -24,7 +24,7 @@ Switch.prototype = {
           $(this).closest("li").addClass("selected");
           $(this).closest("li").siblings().removeClass("selected");
 
-          window.Vis.getLayers()[1].getSubLayer(2).show();
+          window.Vis.getLayers()[1].show();
           App.map.map.removeLayer(App.map.dinamycLayer);
         } else {
           return false;
@@ -41,8 +41,7 @@ Switch.prototype = {
 
           $(this).closest("li").addClass("selected");
           $(this).closest("li").siblings().removeClass("selected");
-
-          window.Vis.getLayers()[1].getSubLayer(2).hide();
+          window.Vis.getLayers()[1].hide();
           App.map.map.addLayer(App.map.dinamycLayer);
         } else {
           return false;
@@ -57,7 +56,7 @@ Switch.prototype = {
         $("#dynamic").closest("li").addClass("selected");
         $("#dynamic").closest("li").siblings().removeClass("selected");
 
-        window.Vis.getLayers()[1].getSubLayer(2).hide();
+        window.Vis.getLayers()[1].hide();
         App.map.map.addLayer(App.map.dinamycLayer);
       }, 100);
     }

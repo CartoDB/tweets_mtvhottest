@@ -134,8 +134,9 @@ body {
   border: 2px solid #222;
   width: 240px;
   padding: 10px 0;
-  font: bold 27px/1 "enhanced_dot_digital-7regular";
-  color: #EDB011;
+  font-weight: bold;
+  font-size: 27px;
+  color: #FFF;
   text-align: center;
   background: url('../images/score-bg.png');
   text-shadow: 0 1px 0 #000;
@@ -195,29 +196,3 @@ body {
   box-shadow: 0 1px 1px #000;
 }
 
-.teams {
-  font-size: 12px;
-  margin-top: 10px;
-}
-
-.team {
-  display: inline-block;
-  margin-left: 10px;
-}
-
-.team + .team {
-  margin-left: 20px;
-}
-
-.team em {
-  float: left;
-  display: block;
-  height: 14px;
-  width: 14px;
-  margin-right: 5px;
-  background: url('../images/teams-bg.png');
-}
-
-.team.sas em {
-  background-position: 0 -14px;
-}

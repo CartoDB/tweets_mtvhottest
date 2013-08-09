@@ -13,7 +13,7 @@ Map.prototype = {
   init: function(done) {
     var self = this;
 
-    window.Vis = cartodb.createVis('map', 'scripts/data/viz.json').done(function(vis, layers) {
+    window.Vis = cartodb.createVis('map', window.AppData.STATIC_MAP).done(function(vis, layers) {
       self.map = vis.getNativeMap();
 
       self.dinamycLayer = new L.TimeLayer({

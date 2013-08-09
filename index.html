@@ -35,11 +35,6 @@
 
     <h1 class="title">2013 NBA Playoffs</h1>
     <p class="subtitle">Amount of tweets during Playoff Finals</p>
-    <img src="images/legend.png" title="" alt="" />
-    <div class="teams">
-      <div class="team sas"><em></em>San Antonio Spurs</div>
-      <div class="team mia"><em></em>Miami Heat</div>
-    </div>
   </header>
 
   <!-- Switch -->
@@ -51,7 +46,6 @@
 
   <!-- Slider -->
   <div id="slider_wrapper" class="slider_wrapper">
-    <p id="legend" class="legend">SAS 92 MIA 88</p>
     <div id="slider" class="slider"></div>
     <p id="hour" class="hour">0:00<br /><span>14/6/2013</span></p>
   </div>
@@ -73,6 +67,26 @@
     window.AppData.START_DATE = 1371160800-3600; // one hour before
     window.AppData.END_DATE = 1371938174;
     window.AppData.ANIMATION_SCALE = 10;
+    window.AppData.STATIC_MAP = 'http://osm2.cartodb.com/api/v2/viz/271acd62-0103-11e3-a6ca-6805ca04cef1/viz.json';
+    window.AppData.DYNAMIC_MAP = {
+      user:'osm2',
+      table:'mtvhottest_cleaned',
+      column:'timestamp',
+      steps: 1250,
+      step: 15*60,
+      resolution:1,
+      countby:'sum(i.retweets + 1)'
+      // cdn_url: "0.tiles.cartocdn.com"
+    };
+
+    var BALLS_COLOR_NO_ES = 'rgba(255, 77, 77, .4)',
+      BALLS_COLOR_ES = 'rgba(238, 238, 238, .2)',
+      BALL_SIZE_GAIN = 3; // ball size is greater when this value is increased,
+      BALL_ANIMATION_SPEED = 3; // no more than 5,
+      dragged = false,
+      clicked = false,
+      stopped = true,
+      valueStart = 0;
   </script>
 
   <script src="scripts/vendor/jquery-ui-1.10.2.custom.js"></script>
@@ -87,14 +101,6 @@
   <script src="scripts/app.js"></script>
 
   <script type="text/javascript">
-    var BALLS_COLOR_NO_ES = 'rgba(255, 77, 77, .4)',
-      BALLS_COLOR_ES = 'rgba(238, 238, 238, .2)',
-      BALL_SIZE_GAIN = 3; // ball size is greater when this value is increased,
-      BALL_ANIMATION_SPEED = 3; // no more than 5,
-      dragged = false,
-      clicked = false,
-      stopped = true,
-      valueStart = 0;
 
       var hash = location.hash.split("#").pop();
 
