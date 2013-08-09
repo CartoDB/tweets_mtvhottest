@@ -8,6 +8,7 @@ function meterToPixels(mx, my, zoom) {
     return [px, py];
 }
 
+function initTimeLayer(){
 L.TimeLayer = L.CanvasLayer.extend({
 
   options: window.AppData.DYNAMIC_MAP,
@@ -72,29 +73,6 @@ L.TimeLayer = L.CanvasLayer.extend({
            " GROUP BY g, d";
     sql += ") SELECT st_x(g) x, st_y(g) y, array_agg(c) vals, array_agg(d) dates ";
     sql += " FROM cte GROUP BY x,y";
-
-    // var sql = "WITH hgrid AS ( " +
-    // "    SELECT CDB_RectangleGrid( " +
-    // "       CDB_XYZ_Extent({0}, {1}, {2}), ".format(coord.x, coord.y, zoom) +
-    // "       CDB_XYZ_Resolution({0}) * {1}, ".format(zoom, self.options.resolution) +
-    // "       CDB_XYZ_Resolution({0}) * {1} ".format(zoom, self.options.resolution) +
-    // "    ) as cell " +
-    // " ) " +
-    // " SELECT  " +
-    // "    x, y, array_agg(c) tweets, array_agg(d) dates " +
-    // " FROM ( " +
-    // "    SELECT " +
-    // "      round(CAST (st_xmax(hgrid.cell) AS numeric),4) x, round(CAST (st_ymax(hgrid.cell) AS numeric),4) y, " +
-    // "      {0} c, floor((date_part('epoch',{1})- {2})/{3}) d ".format(self.options.countby, self.options.column, self.options.start_date, self.options.step) +
-    // "    FROM " +
-    // "        hgrid, {0} i ".format(self.options.table) +
-    // "    WHERE " +
-    // "        date_part('epoch',i.{0}) > {1} ".format(self.options.column, self.options.start_date) + 
-    // "        AND date_part('epoch',i.{0}) < {1} ".format(self.options.column, self.options.end_date) + 
-    // "        AND ST_Intersects(i.the_geom_webmercator, hgrid.cell) " +
-    // "    GROUP BY " +
-    // "        hgrid.cell, floor((date_part('epoch',{0}) - {1})/{2})".format(self.options.column, self.options.start_date, self.options.step) +
-    // " ) f GROUP BY x, y";
 
     self.sql(sql, function (data) {
       var time_data = self.pre_cache_months(data.rows, coord, zoom);
@@ -317,7 +295,7 @@ Entities.prototype.update = function(dt) {
       this.last--;
     }
 };
-
+}
 
 
 String.prototype.format = (function (i, safe, arg) {

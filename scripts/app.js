@@ -2,7 +2,7 @@ var App = {
   animables: [], // list of objects need to be updated and rendered
   initialize: function(options) {
     var self = this;
-
+    initTimeLayer();
     this.options = _.extend({}, options);
 
     this.old_time = window.AppData.START_DATE;
