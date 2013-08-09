@@ -74,7 +74,9 @@ function initTimeLayer(){
       sql += ") SELECT st_x(g) x, st_y(g) y, array_agg(c) vals, array_agg(d) dates ";
       sql += " FROM cte GROUP BY x,y";
 
+            console.log(sql)
       self.sql(sql, function (data) {
+            console.log(data)
         var time_data = self.pre_cache_months(data.rows, coord, zoom);
         self._tileLoaded(coord, time_data);
       });

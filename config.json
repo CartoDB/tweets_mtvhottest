@@ -4,7 +4,7 @@ CONFIG = {
     subtile: "This map shows every geolocated Tweet mentioning #MTVHottest since the hashtag began"
   },
   static_map: {
-    vizjson: "viz.json"
+    vizjson: "data/viz.json"
   },
   dynamic_map: {
       user:'osm2',
@@ -17,7 +17,7 @@ CONFIG = {
       animation_scale: 10,
       ball_size_gain: 1,
       ball_animation_speed: 8,
-      balls_color: "rgba(238, 45, 45, .50)"
+      balls_color: "rgba(252,11,130, .50)"
   },
   cdn_url: "0.tiles.cartocdn.com"
 }
