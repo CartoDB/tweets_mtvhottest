@@ -1,13 +1,13 @@
 var App = {
   animables: [], // list of objects need to be updated and rendered
-  old_time: window.AppData.START_DATE,
-  time: window.AppData.START_DATE,
-  last_time: window.AppData.END_DATE,
-
   initialize: function(options) {
     var self = this;
 
     this.options = _.extend({}, options);
+
+    this.old_time = window.AppData.START_DATE;
+    this.time = window.AppData.START_DATE;
+    this.last_time = window.AppData.END_DATE;
 
     this.mode = this.options.mode || "";
 

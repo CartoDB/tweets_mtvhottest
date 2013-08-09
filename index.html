@@ -63,7 +63,6 @@
 
   <script type="text/javascript">
     window.AppData = window.AppData || {};
-
     window.AppData.START_DATE = 1371160800-3600; // one hour before
     window.AppData.END_DATE = 1371938174;
     window.AppData.ANIMATION_SCALE = 10;
@@ -78,15 +77,9 @@
       countby:'sum(i.retweets + 1)'
       // cdn_url: "0.tiles.cartocdn.com"
     };
-
-    var BALLS_COLOR_NO_ES = 'rgba(255, 77, 77, .4)',
-      BALLS_COLOR_ES = 'rgba(238, 238, 238, .2)',
-      BALL_SIZE_GAIN = 3; // ball size is greater when this value is increased,
-      BALL_ANIMATION_SPEED = 3; // no more than 5,
-      dragged = false,
-      clicked = false,
-      stopped = true,
-      valueStart = 0;
+    window.AppData.BALLS_COLOR = 'rgba(238, 45, 45, .50)';
+    window.AppData.BALL_SIZE_GAIN = 1;
+    window.AppData.BALL_ANIMATION_SPEED = 8;
   </script>
 
   <script src="scripts/vendor/jquery-ui-1.10.2.custom.js"></script>
@@ -102,7 +95,19 @@
 
   <script type="text/javascript">
 
+
+      var dragged = false,
+         clicked = false,
+         stopped = true,
+         valueStart = 0;
       var hash = location.hash.split("#").pop();
+
+
+      var sql = new cartodb.SQL({ user: 'javi' });
+          sql.execute("SELECT max(date_part('epoch', timestamp))::int as end_date, min(date_part('epoch', timestamp))::int -3600 as start_date FROM game7_tweets")
+      .done(function(data) {
+        console.log(data)
+      })
 
       if(hash.length === 0) {
         App.initialize();

@@ -129,7 +129,7 @@ L.TimeLayer = L.CanvasLayer.extend({
         var base_idx = i * this.MAX_UNITS;
         //def[row.sd[0]] = row.se[0];
         for (var j = 0; j < row.dates.length; ++j) {
-            values[base_idx + row.dates[j]] = Math.min(row.vals[j]*window.BALL_SIZE_GAIN, 30);
+            values[base_idx + row.dates[j]] = Math.min(row.vals[j]*window.AppData.BALL_SIZE_GAIN, 30);
         }
     }
 
@@ -157,7 +157,7 @@ L.TimeLayer = L.CanvasLayer.extend({
       for(var i = 0; i < tile.length; ++i) {
         var cell = tile.values[this.MAX_UNITS * i + this.time];
         if (cell) {
-          this.queue.push([xcoords[i],  ycoords[i], cell, 0]);
+          this.queue.push([xcoords[i],  ycoords[i], cell]);
         }
       }
   },
@@ -238,12 +238,13 @@ var Entities = function(size, remove_callback) {
     this.last = 0;
     this.size = size;
     this.sprites = []
-    this.sprites.push(this.pre_cache_sprites(window.BALLS_COLOR_ES));
-    this.sprites.push(this.pre_cache_sprites(window.BALLS_COLOR_NO_ES));
+    this.sprites.push(this.pre_cache_sprites(window.AppData.BALLS_COLOR));
+    // this.sprites.push(this.pre_cache_sprites(window.BALLS_COLOR_NO_ES));
 }
 
 Entities.prototype.pre_cache_sprites = function(color) {
   var sprites = []
+  console.log(color)
   for(var i = 0; i < 30; ++i) {
     var pixel_size = i*2 + 2;
     var canvas = document.createElement('canvas');
@@ -261,13 +262,13 @@ Entities.prototype.pre_cache_sprites = function(color) {
   return sprites;
 }
 
-Entities.prototype.add = function(x, y, life, type) {
+Entities.prototype.add = function(x, y, life) {
   if(this.last < this.size) {
     this.x[this.last] = x;
     this.y[this.last] = y;
     this.life[this.last] = Math.min(life, 29);
     this.current_life[this.last] = 0;
-    this.type[this.last] = type;
+    // this.type[this.last] = type;
     this.last++;
   }
 }
@@ -280,9 +281,9 @@ Entities.prototype.render= function(ctx) {
   var s, t;
   for(var i = 0; i < this.last ; ++i) {
     s = (this.current_life[i])>>0;
-    t = this.type[i];
+    // t = this.type[i];
     //ctx.arc(this.x[i], this.y[i] ,3*this.life[i], 0, 2*Math.PI, true, true);
-    ctx.drawImage(this.sprites[t][s], (this.x[i] - s*2)>>0, (this.y[i] - s*2)>>0);
+    ctx.drawImage(this.sprites[0][s], (this.x[i] - s*2)>>0, (this.y[i] - s*2)>>0);
   }
 }
 
@@ -294,7 +295,7 @@ Entities.prototype.update = function(dt) {
     for(var i = len - 1; i >= 0; --i) {
         //var c = (this.life[i] -= this.life[i]*0.15);
         var diff = this.life[i] - this.current_life[i];
-        this.current_life[i] += diff*dt*window.BALL_ANIMATION_SPEED;
+        this.current_life[i] += diff*dt*window.AppData.BALL_ANIMATION_SPEED;
 
         this.current_life[i] = Math.min(this.life[i] - 0.001, this.current_life[i]);
 
