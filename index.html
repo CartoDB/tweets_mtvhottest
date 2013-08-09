@@ -63,20 +63,9 @@
 
   <script type="text/javascript">
     window.AppData = window.AppData || {};
-    window.AppData.START_DATE = 1371160800-3600; // one hour before
-    window.AppData.END_DATE = 1371938174;
-    window.AppData.DYNAMIC_MAP = {
-      user:'osm2',
-      table:'mtvhottest_cleaned',
-      column:'timestamp',
-      steps: 1250,
-      step: 15*60,
-      resolution:1,
-      countby:'sum(i.retweets + 1)'
-      // cdn_url: "0.tiles.cartocdn.com"
-    };
   </script>
 
+  <script src="settings.json"></script>
   <script src="scripts/vendor/jquery-ui-1.10.2.custom.js"></script>
   <script src="scripts/leaflet_tileloader_mixin.js"></script>
   <script src="scripts/canvas_layer.js"></script>
@@ -91,12 +80,7 @@
   <script type="text/javascript">
 
 
-    window.AppData.ANIMATION_SCALE = 10;
-    window.AppData.STATIC_MAP = 'http://osm2.cartodb.com/api/v2/viz/271acd62-0103-11e3-a6ca-6805ca04cef1/viz.json';
-    window.AppData.BALLS_COLOR = 'rgba(238, 45, 45, .50)';
-    window.AppData.BALL_SIZE_GAIN = 1;
-    window.AppData.BALL_ANIMATION_SPEED = 8;
-    
+
       var dragged = false,
          clicked = false,
          stopped = true,
@@ -104,19 +88,37 @@
       var hash = location.hash.split("#").pop();
 
 
-      var sql = new cartodb.SQL({ user: 'javi' });
-          sql.execute("SELECT max(date_part('epoch', timestamp))::int as end_date, min(date_part('epoch', timestamp))::int -3600 as start_date FROM game7_tweets")
-      .done(function(data) {
-        console.log(data)
-      })
+      window.AppData.DYNAMIC_MAP = {
+        user:SETTINGS.dynamic_map.user,
+        table:SETTINGS.dynamic_map.table,
+        column:SETTINGS.dynamic_map.column,
+        steps: SETTINGS.dynamic_map.steps,
+        step: SETTINGS.dynamic_map.step,
+        resolution:SETTINGS.dynamic_map.resolution,
+        countby:SETTINGS.dynamic_map.countby,
+        cdb_url:SETTINGS.dynamic_map.cdn_url
+      };
+      window.AppData.ANIMATION_SCALE = SETTINGS.dynamic_map.animation_scale;
+      window.AppData.BALLS_COLOR = SETTINGS.dynamic_map.balls_color;
+      window.AppData.BALL_SIZE_GAIN = SETTINGS.dynamic_map.ball_size_gain;
+      window.AppData.BALL_ANIMATION_SPEED = SETTINGS.dynamic_map.ball_animation_speed;
 
-      if(hash.length === 0) {
-        App.initialize();
-      } else if(hash.split("/")[0] === "dynamic") {
-        App.initialize({mode: "dynamic"});
-      } else if(hash.split("/")[0] === "static") {
-        App.initialize();
-      }
+      window.AppData.STATIC_MAP = SETTINGS.static_map.vizjson;
+
+      var sql = new cartodb.SQL({ user: SETTINGS.dynamic_map.user });
+          sql.execute("SELECT max(date_part('epoch', {{column}}))::int as end_date, min(date_part('epoch', {{column}}))::int -3600 as start_date FROM {{table}}", {table:SETTINGS.dynamic_map.table, column:SETTINGS.dynamic_map.column})
+          .done(function(data) {
+            window.AppData.START_DATE = data.rows[0].start_date; // one hour before
+            window.AppData.END_DATE = data.rows[0].end_date;
+            if(hash.length === 0) {
+              App.initialize();
+            } else if(hash.split("/")[0] === "dynamic") {
+              App.initialize({mode: "dynamic"});
+            } else if(hash.split("/")[0] === "static") {
+              App.initialize();
+            }
+          })
+
   </script>
 </body>
 </html>
