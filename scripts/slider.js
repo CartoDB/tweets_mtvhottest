@@ -61,26 +61,26 @@ Slider.prototype = {
     }
   },
   checkMatch: function(time) {
-    var match = this.results[parseInt(time*0.001, 10)];
-    if(typeof match != "undefined") {
-      $("#legend").text(match);
-    } else {
-      for(var i = 0; i < this.times.length-1; i++) {
-        if(parseInt(time*0.001, 10) > this.times[i] && parseInt(time*0.001, 10) < this.times[i+1]) {
-          $("#legend").text(this.results[this.times[i]]);
-        } else if(parseInt(time*0.001, 10) > this.times[this.times.length-1]) {
-          $("#legend").text(this.results[this.times[this.times.length-1]]);
-        }
-      }
+    // var match = this.results[parseInt(time*0.001, 10)];
+    // if(typeof match != "undefined") {
+    //   $("#legend").text(match);
+    // } else {
+    //   for(var i = 0; i < this.times.length-1; i++) {
+    //     if(parseInt(time*0.001, 10) > this.times[i] && parseInt(time*0.001, 10) < this.times[i+1]) {
+    //       $("#legend").text(this.results[this.times[i]]);
+    //     } else if(parseInt(time*0.001, 10) > this.times[this.times.length-1]) {
+    //       $("#legend").text(this.results[this.times[this.times.length-1]]);
+    //     }
+    //   }
 
-      for(var i = 0; i < this.animationscaletimes.length-1; i++) {
-        if(parseInt(time*0.001, 10) > this.animationscaletimes[i] && parseInt(time*0.001, 10) < this.animationscaletimes[i+1]) {
-          window.AppData.ANIMATION_SCALE = this.animationscales[this.animationscaletimes[i]];
-        } else if(parseInt(time*0.001, 10) > this.times[this.times.length-1]) {
-          window.AppData.ANIMATION_SCALE = this.animationscales[this.animationscaletimes[this.animationscaletimes.length-1]];
-        }
-      }
-    }
+    //   for(var i = 0; i < this.animationscaletimes.length-1; i++) {
+    //     if(parseInt(time*0.001, 10) > this.animationscaletimes[i] && parseInt(time*0.001, 10) < this.animationscaletimes[i+1]) {
+    //       window.AppData.ANIMATION_SCALE = this.animationscales[this.animationscaletimes[i]];
+    //     } else if(parseInt(time*0.001, 10) > this.times[this.times.length-1]) {
+    //       window.AppData.ANIMATION_SCALE = this.animationscales[this.animationscaletimes[this.animationscaletimes.length-1]];
+    //     }
+    //   }
+    // }
   },
 
   _initBindings: function() {

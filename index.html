@@ -52,6 +52,18 @@
   <!-- Map -->
   <div id="map" class="map"></div>
 
+
+  <!-- Legend -->
+  <div id="legend" class="legend">
+    <!-- <div class="title"></div> -->
+    <ul>
+      <li class="0"><a target="_blank" href="https://twitter.com/LadyGaga"><img src="images/ladygaga.jpeg"></a></li>
+      <li class="1"><a target="_blank" href="https://twitter.com/JTimberlake"><img src="images/jtimberlake.jpeg"></a></li>
+      <li class="2"><a target="_blank" href="https://twitter.com/NickiMinaj"><img src="images/nickiminaj.jpeg"></a></li>
+      <li class="3"><a target="_blank" href="https://twitter.com/DemiLovato"><img src="images/demilovato.png"></a></li>
+      <li class="4"><a target="_blank" href="https://twitter.com/OneDirection"><img src="images/onedirection.jpeg"></a></li>
+  </div>
+
   <!-- Google Analytics -->
   <script>
     var _gaq=[['_setAccount','UA-20934186-3'],['_trackPageview']];
@@ -95,8 +107,17 @@
         step: CONFIG.dynamic_map.step,
         resolution:CONFIG.dynamic_map.resolution,
         countby:CONFIG.dynamic_map.countby,
-        cdb_url:CONFIG.cdn_url
+        cdb_url:CONFIG.cdn_url,
+        color_map: [
+          "rgba(240, 2, 127,0.4)",
+          "rgba(56, 108, 176,0.4)",
+          "rgba(253, 192, 134,0.4)",
+          "rgba(127, 201, 127,0.4)",
+          "rgba(136, 86, 167,0.4)"
+          // "rgba(255, 255, 153,0.4)"
+        ]
       };
+
       window.AppData.ANIMATION_SCALE = CONFIG.dynamic_map.animation_scale;
       window.AppData.BALLS_COLOR = CONFIG.dynamic_map.balls_color;
       window.AppData.BALL_SIZE_GAIN = CONFIG.dynamic_map.ball_size_gain;
@@ -113,7 +134,7 @@
             window.AppData.START_DATE = data.rows[0].start_date; // one hour before
             window.AppData.END_DATE = data.rows[0].end_date;
             if(hash.length === 0) {
-              App.initialize();
+              App.initialize({mode: "dynamic"});
             } else if(hash.split("/")[0] === "dynamic") {
               App.initialize({mode: "dynamic"});
             } else if(hash.split("/")[0] === "static") {

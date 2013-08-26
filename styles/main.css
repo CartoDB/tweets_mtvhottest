@@ -84,6 +84,64 @@ body {
 }
 
 
+
+/* ==========================================================================
+   LEGEND
+   ========================================================================== */
+
+.legend {
+  position: absolute;
+  top: 100px;
+  z-index: 100;
+  top: 75px;
+  right: 15px;
+  /*margin-left: -122px;*/
+  border: 2px solid #222;
+  width: 95px;
+  /*padding: 10px 0;*/
+  /*font-weight: bold;*/
+  /*font-size: 27px;*/
+  /*color: #FFF;*/
+  /*text-align: center;*/
+  background: url('../images/score-bg.png');
+  /*text-shadow: 0 1px 0 #000;*/
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.8);
+}
+
+.legend ul {
+  list-style: none;
+}
+
+.legend li {
+  width: 75px;
+  height: 75px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.legend ul li:nth-child(1) {
+  background: rgba(240, 2, 127,0.9);
+}
+.legend ul li:nth-child(2) {
+  background: rgba(56, 108, 176,0.9);
+}
+.legend ul li:nth-child(3) {
+  background: rgba(253, 192, 134,0.9);
+}
+.legend ul li:nth-child(4) {
+  background: rgba(127, 201, 127,0.9);
+}
+.legend ul li:nth-child(5) {
+  background: rgba(136, 86, 167,0.9);
+}
+
+.legend li img {
+  width: 75px;
+  height: 75px;
+}
+
+
 /* ==========================================================================
    SWITCH
    ========================================================================== */

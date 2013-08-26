@@ -30,7 +30,7 @@ function initTimeLayer(){
       }
 
       this.MAX_UNITS = this.options.steps + 2;
-      this.entities = new Entities(7000);
+      this.entities = new Entities(7000, null, this.options.color_map);
       this.time = -4; // one hour before
       this.queue = [];
       this.realTime = -4.0; // one hour before
@@ -50,7 +50,8 @@ function initTimeLayer(){
     get_time_data: function (coord, zoom) {
       var self = this;
       this.table = this.options.table;
-
+      this.coord = coord;
+      this.zoom = zoom;
       if (!self.table) {
           return;
       }
@@ -61,26 +62,24 @@ function initTimeLayer(){
       // take se and sd as a matrix [se|sd]
       var numTiles = 1 << zoom;
 
-
       sql = "WITH cte AS ( " +
-              "SELECT ST_SnapToGrid(i.the_geom_webmercator, " +
+              "SELECT vote_id, ST_SnapToGrid(i.the_geom_webmercator, " +
                                     "CDB_XYZ_Resolution({0})*{1}) g".format(zoom, 4) +
               ", {0} c " .format(self.options.countby) +
               ", floor((date_part('epoch',{0}) - {1})/{2}) d" .format(self.options.column, self.options.start_date, self.options.step);
       sql += " FROM {0} i\n".format(this.options.table) +
-             "WHERE i.the_geom_webmercator && CDB_XYZ_Extent({0}, {1}, {2}) "
+             "WHERE CDB_XYZ_Extent({0}, {1}, {2}) && i.the_geom_webmercator  "
                 .format(coord.x, coord.y, zoom) +
-             " GROUP BY g, d";
-      sql += ") SELECT st_x(g) x, st_y(g) y, array_agg(c) vals, array_agg(d) dates ";
-      sql += " FROM cte GROUP BY x,y";
+             " AND vote_id != 5 GROUP BY g, d, vote_id";
+      sql += ") SELECT vote_id as id, st_x(g)::int x, st_y(g)::int y, array_agg(c) vals, array_agg(d) dates ";
+      sql += " FROM cte GROUP BY x,y, vote_id" ;
 
-            console.log(sql)
-      self.sql(sql, function (data) {
-            console.log(data)
-        var time_data = self.pre_cache_months(data.rows, coord, zoom);
-        self._tileLoaded(coord, time_data);
-      });
-
+      if (coord.x >= 0 && coord.y > 0 && coord.x < Math.pow(2,zoom) && coord.y < Math.pow(2,zoom)) {
+        this.sql(sql, function (data) {
+          var time_data = self.pre_cache_months(data.rows, self.coord, self.zoom);
+          self._tileLoaded(coord, time_data);
+        });
+      }
     },
 
 
@@ -93,6 +92,7 @@ function initTimeLayer(){
           xcoords = new Float32Array(rows.length);
           ycoords = new Float32Array(rows.length);
           values = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
+          ids = new Uint8Array(rows.length);
           // values_non_es = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
       } else {
         alert("you browser does not support Typed Arrays");
@@ -104,6 +104,7 @@ function initTimeLayer(){
       for (var i in rows) {
           row = rows[i];
           pixels = meterToPixels(row.x, row.y, zoom); 
+          ids[i] = row.id;
           xcoords[i] = pixels[0];
           ycoords[i] = (total_pixels - pixels[1]);
           var base_idx = i * this.MAX_UNITS;
@@ -118,6 +119,7 @@ function initTimeLayer(){
           xcoords: xcoords,
           ycoords: ycoords,
           values: values,
+          ids: ids,
           // values_non_es: values_non_es,
           size: 1 << (this.resolution * 2)
       };
@@ -137,7 +139,7 @@ function initTimeLayer(){
         for(var i = 0; i < tile.length; ++i) {
           var cell = tile.values[this.MAX_UNITS * i + this.time];
           if (cell) {
-            this.queue.push([xcoords[i],  ycoords[i], cell]);
+            this.queue.push([xcoords[i],  ycoords[i], cell, tile.ids[i]]);
           }
         }
     },
@@ -208,43 +210,53 @@ function initTimeLayer(){
     }
   });
 
-  var Entities = function(size, remove_callback) {
+  var Entities = function(size, remove_callback, color_map) {
       this.x = new Float32Array(size);
       this.y = new Float32Array(size);
+      this.id = new Float32Array(size);
       this.life = new Float32Array(size);
       this.current_life = new Float32Array(size);
       this.remove = new Int32Array(size);
       this.type = new Int8Array(size);
       this.last = 0;
       this.size = size;
+      // this.color = "rgba(255,0,0,0.5)";
       this.sprites = []
-      this.sprites.push(this.pre_cache_sprites(window.AppData.BALLS_COLOR));
       // this.sprites.push(this.pre_cache_sprites(window.BALLS_COLOR_NO_ES));
+      this.sprites.push(this.pre_cache_sprites(color_map));
   }
 
-  Entities.prototype.pre_cache_sprites = function(color) {
+  Entities.prototype.pre_cache_sprites = function(color_map) {
     var sprites = []
-    for(var i = 0; i < 30; ++i) {
-      var pixel_size = i*2 + 2;
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-      ctx.width = canvas.width = pixel_size * 2;
-      ctx.height = canvas.height = pixel_size * 2;
-      ctx.fillStyle = color;//'rgba(0, 255,255, 0.12)';
-      ctx.beginPath();
-      ctx.globalAlpha = 1.0 - i/25;
-      ctx.arc(pixel_size, pixel_size, pixel_size, 0, Math.PI*2, true, true);
-      ctx.closePath();
-      ctx.fill();
-      sprites.push(canvas);
+    for ( var m = 0; m < color_map.length; ++m ){
+      var colors = [];
+      for(var i = 0; i < 30; ++i) {
+        var pixel_size = i*2 + 2;
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.width = canvas.width = pixel_size * 2;
+        ctx.height = canvas.height = pixel_size * 2;
+        ctx.fillStyle = color_map[m]; //color;//'rgba(0, 255,255, 0.12)';
+        ctx.beginPath();
+        ctx.globalAlpha = 1.0 - i/25;
+        ctx.arc(pixel_size, pixel_size, pixel_size, 0, Math.PI*2, true, true);
+        ctx.closePath();
+        ctx.fill();
+        colors.push(canvas);
+      }
+      sprites.push(colors)
     }
     return sprites;
   }
 
-  Entities.prototype.add = function(x, y, life) {
+  Entities.prototype.add = function(x, y, life, id) {
     if(this.last < this.size) {
+      // this.color = color_map[id]; //"rgba(0,0,255,0.4)";
+      // this.sprite = this.pre_cache_sprites(this.color);
+      // this.id = id;
       this.x[this.last] = x;
       this.y[this.last] = y;
+      this.id[this.last] = id;
       this.life[this.last] = Math.min(life, 29);
       this.current_life[this.last] = 0;
       // this.type[this.last] = type;
@@ -259,10 +271,11 @@ function initTimeLayer(){
   Entities.prototype.render= function(ctx) {
     var s, t;
     for(var i = 0; i < this.last ; ++i) {
+      // console.log(this.)
       s = (this.current_life[i])>>0;
       // t = this.type[i];
       //ctx.arc(this.x[i], this.y[i] ,3*this.life[i], 0, 2*Math.PI, true, true);
-      ctx.drawImage(this.sprites[0][s], (this.x[i] - s*2)>>0, (this.y[i] - s*2)>>0);
+      ctx.drawImage(this.sprites[0][this.id[i]][s], (this.x[i] - s*2)>>0, (this.y[i] - s*2)>>0);
     }
   }
 
@@ -289,6 +302,7 @@ function initTimeLayer(){
         // move last to the removed one and remove it
         this.x[r] = this.x[last];
         this.y[r] = this.y[last];
+        this.id[r] = this.id[last];
         this.life[r] = this.life[last];
         this.current_life[r] = this.current_life[last]
         this.type[r] = this.type[last];
@@ -297,7 +311,6 @@ function initTimeLayer(){
       }
   };
 }
-
 
 String.prototype.format = (function (i, safe, arg) {
     function format() {
