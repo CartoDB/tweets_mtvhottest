@@ -4,6 +4,8 @@ var App = {
     var self = this;
 
     
+    initTimeLayer();
+
     this.options = _.extend({}, options);
 
     this.old_time = window.AppData.START_DATE;
@@ -13,7 +15,6 @@ var App = {
     this.mode = this.options.mode || "";
 
     // Map
-      initTimeLayer();
     this.map = new Map();
 
     // Switch
