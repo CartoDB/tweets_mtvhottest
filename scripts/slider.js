@@ -17,15 +17,15 @@ function Slider(el, options) {
   this.times = [1370999,1371172,1371427,1371604,1371777]
   this.animationscaletimes = [1371156,1371188,1371411,1371443,1371588,1371620,1371761,1371793]
 
-  this.results = {
-    // '1370567': 'SAS 92 MIA 88',
-    // '1370822': 'MIA 103 SAS 84',
-    '1370999': 'SAS 113 MIA 77',
-    '1371172': 'MIA 109 SAS 93',
-    '1371427': 'SAS 114 MIA 104',
-    '1371604': 'MIA 103 SAS 100',
-    '1371777': 'MIA 95 SAS 88'
-  };
+  // this.results = {
+  //   // '1370567': 'SAS 92 MIA 88',
+  //   // '1370822': 'MIA 103 SAS 84',
+  //   '1370999': 'SAS 113 MIA 77',
+  //   '1371172': 'MIA 109 SAS 93',
+  //   '1371427': 'SAS 114 MIA 104',
+  //   '1371604': 'MIA 103 SAS 100',
+  //   '1371777': 'MIA 95 SAS 88'
+  // };
 
   this.animationscales = {
     // '1370480': 10,
@@ -52,7 +52,7 @@ Slider.prototype = {
   initialize: function() {
     this.$el.slider();
     this._initBindings();
-    this.drawMatch();
+    // this.drawMatch();
   },
 
   drawMatch: function() {
