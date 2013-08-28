@@ -1,6 +1,6 @@
 CONFIG = {
   webpage: {
-    title: "2013 MTV Hottest",
+    title: "VMA's Hottest",
     subtile: "This map shows every geolocated Tweet mentioning #MTVHottest since the hashtag began"
   },
   static_map: {
