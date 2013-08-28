@@ -30,6 +30,7 @@ L.CanvasLayer = L.Class.extend({
 
 
   onAdd: function (map) {
+    var self = this;
     this._map = map;
 
     this._canvas = document.createElement('canvas');
@@ -47,9 +48,13 @@ L.CanvasLayer = L.Class.extend({
       //map.on('zoomanim', this._animateZoom, this);
     //}
     //
-    this._initTileLoader();
 
-    this._reset();
+    // WITHOUT THE TIMEOUT data is loaded first for Zoom 2 and then for whatever
+    // Final zoom is applied by viz. Need a better method probably. 
+    setTimeout(function(){
+      self._initTileLoader();
+      self._reset();
+    }, 200)
   },
 
   draw: function() {

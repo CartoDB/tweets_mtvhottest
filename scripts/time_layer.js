@@ -71,7 +71,7 @@ function initTimeLayer(){
              "WHERE CDB_XYZ_Extent({0}, {1}, {2}) && i.the_geom_webmercator  "
                 .format(coord.x, coord.y, zoom) +
              " AND vote_id != 5 GROUP BY g, d, vote_id";
-      sql += ") SELECT vote_id as id, st_x(g)::int x, st_y(g)::int y, array_agg(c) vals, array_agg(d) dates ";
+      sql += ") SELECT vote_id as id, st_x(g) x, st_y(g) y, array_agg(c) vals, array_agg(d) dates ";
       sql += " FROM cte GROUP BY x,y, vote_id" ;
 
       if (coord.x >= 0 && coord.y > 0 && coord.x < Math.pow(2,zoom) && coord.y < Math.pow(2,zoom)) {
@@ -89,8 +89,8 @@ function initTimeLayer(){
       var ycoords;
       var values;
       if (typeof(ArrayBuffer) !== undefined) {
-          xcoords = new Float32Array(rows.length);
-          ycoords = new Float32Array(rows.length);
+          xcoords = new Float32Array(rows.length );
+          ycoords = new Float32Array(rows.length );
           values = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
           ids = new Uint8Array(rows.length);
           // values_non_es = new Uint8Array(rows.length * this.MAX_UNITS);// 256 months
@@ -113,7 +113,7 @@ function initTimeLayer(){
               values[base_idx + row.dates[j]] = Math.min(row.vals[j]*window.AppData.BALL_SIZE_GAIN, 30);
           }
       }
-
+      // console.log(xcoords)
       return {
           length: rows.length,
           xcoords: xcoords,

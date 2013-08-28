@@ -3,7 +3,6 @@ var App = {
   initialize: function(options) {
     var self = this;
 
-    initTimeLayer();
     
     this.options = _.extend({}, options);
 
@@ -14,6 +13,7 @@ var App = {
     this.mode = this.options.mode || "";
 
     // Map
+      initTimeLayer();
     this.map = new Map();
 
     // Switch

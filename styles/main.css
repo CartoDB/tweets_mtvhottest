@@ -118,15 +118,15 @@ body {
   position: relative;
 }
 
-.legend ul li:nth-child(1) .circle {
+.legend ul li:nth-child(3) .circle {
   background: #d90273;
   background: rgba(240, 2, 127,0.9);
 }
-.legend ul li:nth-child(2) .circle {
+.legend ul li:nth-child(5) .circle {
   background: #33629f;
   background: rgba(56, 108, 176,0.9);
 }
-.legend ul li:nth-child(3) .circle {
+.legend ul li:nth-child(2) .circle {
   background: #e5ae79;
   background: rgba(253, 192, 134,0.9);
 }
@@ -134,20 +134,20 @@ body {
   background: #73b673;
   background: rgba(127, 201, 127,0.9);
 }
-.legend ul li:nth-child(5) .circle {
+.legend ul li:nth-child(1) .circle {
   background: #7b4e97;
   background: rgba(136, 86, 167,0.9);
 }
 
-.legend ul li:nth-child(1) .handle {
+.legend ul li:nth-child(3) .handle {
   color: #d90273;
   color: rgba(240, 2, 127,0.9);
 }
-.legend ul li:nth-child(2) .handle {
+.legend ul li:nth-child(5) .handle {
   color: #33629f;
   color: rgba(56, 108, 176,0.9);
 }
-.legend ul li:nth-child(3) .handle {
+.legend ul li:nth-child(2) .handle {
   color: #e5ae79;
   color: rgba(253, 192, 134,0.9);
 }
@@ -155,7 +155,7 @@ body {
   color: #73b673;
   color: rgba(127, 201, 127,0.9);
 }
-.legend ul li:nth-child(5) .handle {
+.legend ul li:nth-child(1) .handle {
   color: #7b4e97;
   color: rgba(136, 86, 167,0.9);
 }
