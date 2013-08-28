@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Twitter and CartoDB &mdash; 2013 NBA Playoffs</title>
+  <title>Twitter and CartoDB &mdash; 2013 MTV VMAs</title>
   <meta name="viewport" content="width=device-width">
   <meta name="robots">
 
   <!-- Hello metas -->
-  <meta name="keywords" content="twitter, nba, san antonio, miami, cartodb, visualization, data, map, torque, big data">
+  <meta name="keywords" content="twitter, mtv, ladygaga, jtimberlake, nikiminaj, demilovato, onedirection, cartodb, visualization, data, map, torque, big data">
   <meta name="description" content="Twitter and CartoDB ">
   <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
   <meta name="author" content="CartoDB.com">
@@ -57,11 +57,11 @@
   <div id="legend" class="legend">
     <!-- <div class="title"></div> -->
     <ul>
-      <li class="0"><a target="_blank" href="https://twitter.com/LadyGaga"><img src="images/ladygaga.jpeg"></a></li>
-      <li class="1"><a target="_blank" href="https://twitter.com/JTimberlake"><img src="images/jtimberlake.jpeg"></a></li>
-      <li class="2"><a target="_blank" href="https://twitter.com/NickiMinaj"><img src="images/nickiminaj.jpeg"></a></li>
-      <li class="3"><a target="_blank" href="https://twitter.com/DemiLovato"><img src="images/demilovato.png"></a></li>
-      <li class="4"><a target="_blank" href="https://twitter.com/OneDirection"><img src="images/onedirection.jpeg"></a></li>
+      <li class="0"><a target="_blank" href="https://twitter.com/LadyGaga"><div class="circle"> </div><div class="photo"><img src="images/ladygaga.jpeg"></div><div class="handle" >@LadyGaga</div></a></li>
+      <li class="1"><a target="_blank" href="https://twitter.com/JTimberlake"><div class="circle"> </div><div class="photo"><img src="images/jtimberlake.jpeg"></div><div class="handle" >@JTimberlake</div></a></li>
+      <li class="2"><a target="_blank" href="https://twitter.com/NickiMinaj"><div class="circle"> </div><div class="photo"><img src="images/nickiminaj.jpeg"></div><div class="handle" >@NickiMinaj</div></a></li>
+      <li class="3"><a target="_blank" href="https://twitter.com/ddlovato"><div class="circle"> </div><div class="photo"><img src="images/ddlovato.jpeg"></div><div class="handle" >@ddlovato</div></a></li>
+      <li class="4"><a target="_blank" href="https://twitter.com/OneDirection"><div class="circle"> </div><div class="photo"><img src="images/onedirection.jpeg"></div><div class="handle" >@OneDirection</div></a></li>
   </div>
 
   <!-- Google Analytics -->
@@ -138,6 +138,7 @@
             } else if(hash.split("/")[0] === "dynamic") {
               App.initialize({mode: "dynamic"});
             } else if(hash.split("/")[0] === "static") {
+              $('.legend').hide();
               App.initialize();
             }
           })

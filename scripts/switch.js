@@ -18,6 +18,7 @@ Switch.prototype = {
         e.preventDefault();
 
         if(self.dynamicEnabled) {
+          $('.legend').hide();
           self.dynamicEnabled = false;
           self.toggleDynamic(false);
 
@@ -36,6 +37,7 @@ Switch.prototype = {
         e.preventDefault();
 
         if(!self.dynamicEnabled) {
+          $('.legend').show();
           self.dynamicEnabled = true;
           self.toggleDynamic(true);
 
