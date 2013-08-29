@@ -1,9 +1,10 @@
 
 
-function Map(options) {
+function Map(options, done) {
   this.map = null;
   this.dinamycLayer = null;
   this.options = options;
+  this.done = done;
   this.previous_time = new Date().getTime();
 
   this.init();
@@ -27,6 +28,7 @@ Map.prototype = {
       self.previous_time = new Date().getTime();
 
       requestAnimationFrame(self._tick);
+      self.done && self.done();
     });
 
     Events.on("resettime", function() {
