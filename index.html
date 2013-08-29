@@ -132,7 +132,11 @@
       $('h1.title').text(CONFIG.webpage.title);
       $('p.subtitle').text(CONFIG.webpage.subtitle);
 
-      var sql = new cartodb.SQL({ user: CONFIG.dynamic_map.user });
+      var sql = new cartodb.SQL({ 
+        user: CONFIG.dynamic_map.user ,
+        version: 'v2',
+        completeDomain: 'http://a.api.cartocdn.com.global.prod.fastly.net/osm2'
+      });
           sql.execute("SELECT max(date_part('epoch', {{column}}))::int as end_date, min(date_part('epoch', {{column}}))::int -3600 as start_date FROM {{table}}", {table:CONFIG.dynamic_map.table, column:CONFIG.dynamic_map.column})
           .done(function(data) {
             window.AppData.START_DATE = data.rows[0].start_date; // one hour before
