@@ -41,7 +41,7 @@ vizjson({
       "sql_api_endpoint": "/api/v1/sql",
       "sql_api_port": 443,
       "cdn_url": {
-        "http": "tiles.cartocdn.com",
+        "http": "api.cartocdn.com.global.prod.fastly.net",
         "https": "d3pu9mtm6f0hk5.cloudfront.net"
       },
       "layer_definition": {

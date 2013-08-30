@@ -1,7 +1,7 @@
 CONFIG = {
   webpage: {
-    title: "VMA's Hottest",
-    subtile: "This map shows every geolocated Tweet mentioning #MTVHottest since the hashtag began"
+    title: "The rise of #MTVhottest",
+    subtitle: "How the hashtag was Tweeted across the world"
   },
   static_map: {
     vizjson: "data/viz.json"

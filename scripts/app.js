@@ -15,29 +15,31 @@ var App = {
     this.mode = this.options.mode || "";
 
     // Map
-    this.map = new Map();
+    this.map = new Map({}, (function() {
+      // Switch
+      this.switch = new Switch($('#switch'), {mode: self.mode});
 
-    // Switch
-    this.switch = new Switch($('#switch'), {mode: self.mode});
+      // ****
+      // Map animated particled
+      // ****
 
-    // ****
-    // Map animated particled
-    // ****
+      // Slider
+      this.slider = new Slider($('#slider'), {
+        timeMin: window.AppData.START_DATE,
+        timeRange: (window.AppData.END_DATE - window.AppData.START_DATE) * 1
+      });
 
-    // Slider
-    this.slider = new Slider($('#slider'), {
-      timeMin: window.AppData.START_DATE,
-      timeRange: (window.AppData.END_DATE - window.AppData.START_DATE) * 1
-    });
+      this._initBindings();
+      
+      this.animables.push(this.map, this.slider);
+      this._tick = this._tick.bind(this);
 
-    this._initBindings();
-    
-    this.animables.push(this.map, this.slider);
-    this._tick = this._tick.bind(this);
+      setTimeout(function() {
+        requestAnimationFrame(self._tick);
+      }, 1);
 
-    setTimeout(function() {
-      requestAnimationFrame(self._tick);
-    }, 1);
+    }).bind(this));
+
   },
 
   _initBindings: function() {
