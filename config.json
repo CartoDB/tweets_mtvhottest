@@ -8,8 +8,8 @@ CONFIG = {
   },
   dynamic_map: {
       user:'osm2',
-      table:'mtvhottestfinal',
-      column:'date_utc',
+      table:'mtvhottest_final',
+      column:'timestamp',
       steps: 1250,
       step: 15*60,
       resolution:1,

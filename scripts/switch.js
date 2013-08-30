@@ -67,7 +67,7 @@ Switch.prototype = {
   toggleDynamic: function(dynamic) {
     if(dynamic) {
       $(this.$el).animate({
-        bottom: '150px'
+        bottom: '10px'
       }, 250);
 
       Events.trigger("enableslider");

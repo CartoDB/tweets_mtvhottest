@@ -57,7 +57,7 @@ body {
   margin-left: -200px;
   padding: 15px 0;
   text-align: center;
-  background: rgba(0,0,0,.6);
+  /*background: rgba(0,0,0,.6);*/
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }
@@ -99,11 +99,11 @@ body {
   margin-top: -300px;
   z-index: 100;
   right: 15px;
-  border: 2px solid #222;
   width: 115px;
-  background: url('../images/score-bg.png');
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.8);
+  /*border: 2px solid #222;*/
+  /*background: url('../images/score-bg.png');*/
+  /*border-radius: 3px;*/
+  /*box-shadow: 0 1px 3px rgba(0,0,0,.8);*/
 }
 
 .legend ul {
@@ -120,23 +120,23 @@ body {
 
 .legend ul li:nth-child(3) .circle {
   background: #d90273;
-  background: rgba(240, 2, 127,0.9);
+  background: rgba(240, 2, 127,0.6);
 }
 .legend ul li:nth-child(5) .circle {
   background: #33629f;
-  background: rgba(56, 108, 176,0.9);
+  background: rgba(56, 108, 176,0.6);
 }
 .legend ul li:nth-child(2) .circle {
   background: #e5ae79;
-  background: rgba(253, 192, 134,0.9);
+  background: rgba(253, 192, 134,0.6);
 }
 .legend ul li:nth-child(4) .circle {
   background: #73b673;
-  background: rgba(127, 201, 127,0.9);
+  background: rgba(127, 201, 127,0.6);
 }
 .legend ul li:nth-child(1) .circle {
   background: #7b4e97;
-  background: rgba(136, 86, 167,0.9);
+  background: rgba(136, 86, 167,0.6);
 }
 
 .legend ul li:nth-child(3) .handle {
@@ -203,9 +203,9 @@ body {
 .switch {
   position: absolute;
   z-index: 100;
-  bottom: 10px;
-  left: 50%;
-  margin-left: -100px;
+  bottom: -125px;
+  left: 100px;
+  /*margin-left: -100px;*/
   width: 200px;
   text-align: center;
 }
@@ -251,7 +251,7 @@ body {
   font-size: 27px;
   color: #FFF;
   text-align: center;
-  background: url('../images/score-bg.png');
+  /*background: url('../images/score-bg.png');*/
   text-shadow: 0 1px 0 #000;
   border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0,0,0,.8);
